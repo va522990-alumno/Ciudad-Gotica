@@ -53,11 +53,11 @@ const houses=[[12,-4],[16,-4],[12,3],[16,3]],hc=[0xe1c69b,0xd7dfe3,0xc78f72,0xd8
 houses.forEach((p,i)=>{building('CASA '+(i+1),p[0],p[1],2.4,2.5,1.9,hc[i],false,[0x994d43,0x475a70,0x6c4d42,0x8c5948][i]);cube(p[0],.55,p[1]+1.28,.48,.85,.06,0x493c35)});
 tag('ZONA RESIDENCIAL',14,4.2,7.2);
 // FRENTE: cerro y planta de luz
-const hillGeo=new THREE.ConeGeometry(7.2,5.4,8);const hill=new THREE.Mesh(hillGeo,material(0x657b4e));hill.position.set(-10,2.5,12);hill.scale.set(1.15,1,1);hill.castShadow=true;hill.receiveShadow=true;scene.add(hill);
-// Terraza plana en la cima: mantiene la planta visible y apoyada sobre el cerro
-const summit=new THREE.Mesh(new THREE.CylinderGeometry(3.35,3.65,.28,12),material(0x788b5c));summit.position.set(-10,5.12,12);summit.castShadow=true;summit.receiveShadow=true;scene.add(summit);
-building('PLANTA DE LUZ',-10,11.5,3.5,3.1,2.7,0x737c82,false,0x424c55,5.26);
-const chimney=new THREE.Mesh(new THREE.CylinderGeometry(.28,.35,2.8,12),material(0x777b80));chimney.position.set(-8.8,9.35,11.1);chimney.castShadow=true;scene.add(chimney);
+// Cerro con cima ancha y aplanada: la planta queda asentada, no en una punta
+const hillGeo=new THREE.CylinderGeometry(3.25,7.2,5.4,8);const hill=new THREE.Mesh(hillGeo,material(0x657b4e));hill.position.set(-10,2.5,12);hill.scale.set(1.15,1,1);hill.castShadow=true;hill.receiveShadow=true;scene.add(hill);
+// La base del edificio coincide exactamente con la superficie plana de la cima (y=5.2)
+building('PLANTA DE LUZ',-10,11.5,3.5,3.1,2.7,0x737c82,false,0x424c55,5.12);
+const chimney=new THREE.Mesh(new THREE.CylinderGeometry(.28,.35,2.8,12),material(0x777b80));chimney.position.set(-8.8,9.27,11.1);chimney.castShadow=true;scene.add(chimney);
 tag('CERRO · PLANTA DE LUZ',-10,9.4,15.5);
 // GRANJA al lado de la planta, con pasto, establo, cultivos y lago
 ground(7,11,13,11,-.06,0x8aa36a);
