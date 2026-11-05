@@ -2,7 +2,7 @@
 <html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><title>Ciudad Gótica 3D</title>
 <style>
 *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;font-family:Arial;background:#9eb4c8}canvas{display:block;width:100%;height:100%;touch-action:none}
-header{position:fixed;top:12px;left:12px;background:#172333eF;color:white;padding:11px 14px;border-radius:12px;z-index:2}h1{font-size:17px;margin:0 0 4px}small{color:#d0deec}
+header{position:fixed;top:12px;left:12px;background:#172333ed;color:white;padding:11px 14px;border-radius:12px;z-index:2}h1{font-size:17px;margin:0 0 4px}small{color:#d0deec}
 nav{position:fixed;bottom:12px;left:0;right:0;display:flex;justify-content:center;gap:7px;z-index:2;flex-wrap:wrap;padding:0 8px}button{background:#203247;color:white;border:1px solid #71869d;border-radius:10px;padding:10px 13px;font-size:13px}
 #msg{position:fixed;inset:0;display:grid;place-items:center;background:#101722;color:white;padding:25px;text-align:center;z-index:5}
 @media(max-width:600px){h1{font-size:15px}header{top:8px;left:8px;padding:9px 11px}button{padding:9px 11px;font-size:12px}nav{bottom:8px}}
@@ -12,25 +12,65 @@ nav{position:fixed;bottom:12px;left:0;right:0;display:flex;justify-content:cente
 <script type="module">
 import * as THREE from 'three';import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 try{
-const canvas=document.querySelector('#c'),renderer=new THREE.WebGLRenderer({canvas,antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,1.7));renderer.setSize(innerWidth,innerHeight);renderer.shadowMap.enabled=true;
-const scene=new THREE.Scene();scene.background=new THREE.Color(0x9eb4c8);scene.fog=new THREE.Fog(0x9eb4c8,40,80);
-const camera=new THREE.PerspectiveCamera(42,innerWidth/innerHeight,.1,150);camera.position.set(25,23,29);
-const controls=new OrbitControls(camera,canvas);controls.target.set(0,0,0);controls.enableDamping=true;controls.maxPolarAngle=Math.PI*.49;controls.minDistance=12;controls.maxDistance=65;
-scene.add(new THREE.HemisphereLight(0xffffff,0x59616b,2));const sun=new THREE.DirectionalLight(0xffedcf,2.5);sun.position.set(-15,28,18);sun.castShadow=true;scene.add(sun);
-const labels=[];const material=c=>new THREE.MeshStandardMaterial({color:c,roughness:.82});
+const canvas=document.querySelector('#c'),renderer=new THREE.WebGLRenderer({canvas,antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,1.7));renderer.setSize(innerWidth,innerHeight);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+const scene=new THREE.Scene();scene.background=new THREE.Color(0x9eb4c8);scene.fog=new THREE.Fog(0x9eb4c8,48,100);
+const camera=new THREE.PerspectiveCamera(42,innerWidth/innerHeight,.1,180);camera.position.set(31,27,35);
+const controls=new OrbitControls(camera,canvas);controls.target.set(0,1,0);controls.enableDamping=true;controls.maxPolarAngle=Math.PI*.49;controls.minDistance=13;controls.maxDistance=85;
+scene.add(new THREE.HemisphereLight(0xffffff,0x59616b,2));const sun=new THREE.DirectionalLight(0xffedcf,2.5);sun.position.set(-15,32,20);sun.castShadow=true;scene.add(sun);
+const labels=[];const material=(c,r=.84)=>new THREE.MeshStandardMaterial({color:c,roughness:r});
 function cube(x,y,z,w,h,d,color,parent=scene){const o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),material(color));o.position.set(x,y,z);o.castShadow=true;o.receiveShadow=true;parent.add(o);return o}
-function tag(t,x,y,z){const cv=document.createElement('canvas');cv.width=512;cv.height=128;const q=cv.getContext('2d');q.fillStyle='#172333dd';q.beginPath();q.roundRect(5,5,502,118,20);q.fill();q.fillStyle='white';q.font='bold 42px Arial';q.textAlign='center';q.textBaseline='middle';q.fillText(t,256,65);const s=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(cv),depthTest:false}));s.position.set(x,y,z);s.scale.set(4.4,1.1,1);scene.add(s);labels.push(s)}
-function building(t,x,z,w,d,h,col,windows=false){const g=new THREE.Group();g.position.set(x,0,z);scene.add(g);cube(0,h/2+.15,0,w,h,d,col,g);cube(0,h+.28,0,w+.12,.2,d+.12,0x39424d,g);if(windows)for(let y=.8;y<h-.2;y+=.9)for(let xx=-w/2+.35;xx<w/2-.1;xx+=.65)cube(xx,y,d/2+.025,.34,.42,.04,0x91c6d3,g);tag(t,x,h+1,z)}
-cube(0,.27,0,27,.55,21,0x66845c);cube(0,.08,0,4.2,.08,20,0x303943);cube(0,.08,0,26,.08,3.2,0x303943);
-cube(0,.06,-8.1,26,.08,1.8,0x287c9c);cube(0,.18,-7,26,.2,.22,0xaaa99c);cube(0,.18,-9.2,26,.2,.22,0xaaa99c);
-const bridge=new THREE.Group();bridge.position.set(0,.6,-8.1);scene.add(bridge);cube(0,0,0,4.6,.22,1.7,0x8c7256,bridge);tag('PUENTE LEVADIZO',0,3,-8.1);
-const houses=[[-10,-5],[-10,-1],[-10,3],[-7,-5],[-7,-1],[-7,3]],cols=[0xe1c69b,0xd7dfe3,0xc78f72,0xe4d7b8,0xa9c2c7,0xd8b5a1];houses.forEach((p,i)=>building('CASA '+(i+1),p[0],p[1],2.05,2.15,1.8,cols[i]));tag('ZONA RESIDENCIAL',-8,4,5);
-building('EDIFICIO 1',-3.8,5.5,2.6,2.5,7,0x8a9ba8,true);building('EDIFICIO 2',-.2,5.5,2.7,2.5,5.2,0xb4a18a,true);building('EDIFICIO 3',3.2,5.4,2.1,2.4,3.5,0x9dabb0,true);building('EDIFICIO 4',5.9,5.3,2,2.4,2.8,0xb6a18c,true);
-[['TIENDA',-3.8,0xb85f4d,2.2],['CAFÉ',-.7,0x9b7659,2.2],['FARMACIA',2.4,0x78a58b,2.2],['SUPERMERCADO',5.8,0x6b91a8,3]].forEach(a=>building(a[0],a[1],-4.8,a[3],2,2.2,a[2]));tag('ZONA COMERCIAL',1,3.8,-2.7);
-building('PLANTA DE LUZ',10,5.2,3.2,3.3,3,0x737c82);const ch=new THREE.Mesh(new THREE.CylinderGeometry(.28,.35,3.2,12),material(0x777b80));ch.position.set(10.7,4.8,4.3);scene.add(ch);
-cube(10.6,.7,-1.2,2.1,1.2,.65,0x414b56);cube(10.6,1,-.85,1.2,.6,.05,0x1d6673);
-for(const [x,z,w,d] of [[0,-10.4,27,.18],[0,10.4,27,.18],[-13.4,0,.18,20.7],[13.4,0,.18,20.7]])cube(x,.4,z,w,.25,d,0x333e49);
-document.querySelector('#home').onclick=()=>{camera.position.set(25,23,29);controls.target.set(0,0,0);controls.update()};document.querySelector('#above').onclick=()=>{camera.position.set(0,38,.1);controls.target.set(0,0,0);controls.update()};
+function tag(t,x,y,z){const cv=document.createElement('canvas');cv.width=512;cv.height=128;const q=cv.getContext('2d');q.fillStyle='#172333e8';q.beginPath();q.roundRect(5,5,502,118,20);q.fill();q.fillStyle='white';q.font='bold 42px Arial';q.textAlign='center';q.textBaseline='middle';q.fillText(t,256,65);const s=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(cv),depthTest:false}));s.position.set(x,y,z);s.scale.set(4.7,1.15,1);scene.add(s);labels.push(s)}
+function building(t,x,z,w,d,h,col,windows=false,roof=0x39424d){const g=new THREE.Group();g.position.set(x,0,z);scene.add(g);cube(0,h/2+.12,0,w,h,d,col,g);cube(0,h+.25,0,w+.12,.2,d+.12,roof,g);if(windows)for(let y=.8;y<h-.2;y+=.9)for(let xx=-w/2+.35;xx<w/2-.1;xx+=.65){cube(xx,y,d/2+.025,.34,.42,.04,0x91c6d3,g);cube(xx,y,-d/2-.025,.34,.42,.04,0x91c6d3,g)}tag(t,x,h+1,z);return g}
+function ground(x,z,w,d,h,c){cube(x,h/2,z,w,h,d,c)}
+// Base general: city in the middle, residential beside it, hill in front, farm next to the hill.
+ground(0,0,37,30,.65,0x66845c);
+// City streets and sidewalks
+ground(0,1,3.3,22,.09,0x303943);ground(1,1,21,.09,3.0,0x303943);
+for(let z=-8;z<=9;z+=2)ground(0,.13,z,.11,.025,.85,0xf2dfa0);
+for(let x=-9;x<=10;x+=2)ground(x,.13,1,.11,.025,0xf2dfa0);
+// City core
+building('EDIFICIO 1',-4.2,1.5,3,3,6.5,0x8a9ba8,true);
+building('EDIFICIO 2',-.1,1.5,3,3,5,0xb4a18a,true);
+building('EDIFICIO 3',4,1.5,2.5,3,3.7,0x9dabb0,true);
+building('EDIFICIO 4',7.5,1.5,2.4,3,2.8,0xb6a18c,true);
+[['TIENDA',-4,-4.5,0xb85f4d,2.3],['CAFÉ',-.7,-4.5,0x9b7659,2.3],['FARMACIA',2.7,-4.5,0x78a58b,2.3],['SUPERMERCADO',6.2,-4.5,0x6b91a8,3.2]].forEach(a=>building(a[0],a[1],a[2],a[4],2,2.2,a[3],false,0x46515b));
+tag('CENTRO DE LA CIUDAD',1.5,8,5.4);
+// Residential district immediately beside the city: exactly four houses.
+const houses=[[-13,-4],[-13,0],[-13,4],[-9.8,4]],houseColors=[0xe1c69b,0xd7dfe3,0xc78f72,0xd8b5a1];
+houses.forEach((p,i)=>{const g=building('CASA '+(i+1),p[0],p[1],2.2,2.4,1.8,houseColors[i],false,[0x994d43,0x475a70,0x6c4d42,0x8c6549][i]);cube(p[0],.18,p[1]+1.22,.45,.85,.06,0x493c35,g)});
+tag('ZONA RESIDENCIAL',-12,4.4,7);
+// Hill at the front of the city, with a flat summit.
+const hillMat=material(0x687d4c);
+const profile=[new THREE.Vector2(0,0),new THREE.Vector2(7.4,.05),new THREE.Vector2(6.8,.7),new THREE.Vector2(5.7,1.5),new THREE.Vector2(4.7,2.3),new THREE.Vector2(3.8,3.1),new THREE.Vector2(3.35,3.55),new THREE.Vector2(0,3.55)];
+const hill=new THREE.Mesh(new THREE.LatheGeometry(profile,48),hillMat);hill.position.set(-1,-.05,-11);hill.castShadow=true;hill.receiveShadow=true;scene.add(hill);
+tag('CERRO',-1,5.0,-11);
+// Power station on top of the hill
+building('PLANTA DE LUZ',-1, -11,3.1,2.8,2.25,0x747e84,false,0x424c55);
+const chimney=new THREE.Mesh(new THREE.CylinderGeometry(.24,.3,2.2,14),material(0x777b80));chimney.position.set(.25,5.0,-11.6);chimney.castShadow=true;scene.add(chimney);
+cube(-1,4.05,-11,3.7,.12,3.4,0x7a776b);
+// Farm beside the hill, with pond and bridge over the water.
+ground(9,-11,11,12,.12,0x79965b);tag('GRANJA',9,3,-5.2);
+building('GRANERO',11,-6.8,3.2,2.8,2.4,0xb66d43,false,0x6e3e32);
+const barnDoor=cube(11, .72,-5.35,1,.0+1.25,.08,0x593d2e);
+// Pond as a flattened oval
+const pond=new THREE.Mesh(new THREE.CylinderGeometry(3.0,3.0,.18,48),material(0x287c9c,.25));pond.scale.set(1.45,1,1);pond.position.set(8.3,.13,-12.5);pond.receiveShadow=true;scene.add(pond);
+const shore=new THREE.Mesh(new THREE.TorusGeometry(3.0,.18,8,48),material(0xb7a77c));shore.scale.set(1.45,1,1);shore.rotation.x=Math.PI/2;shore.position.set(8.3,.18,-12.5);scene.add(shore);
+// Bridge visibly crossing the lake
+const bridge=new THREE.Group();bridge.position.set(8.3,.42,-12.5);scene.add(bridge);cube(0,0,0,.95,.22,7.4,0x8b704e,bridge);
+for(const x of [-.55,.55])cube(x,.28,0,.12,.42,7.4,0x514c45,bridge);
+for(let z=-2.8;z<=2.8;z+=.7)cube(0,.13,z,1.0,.05,.08,0xc6aa78,bridge);
+tag('PUENTE SOBRE EL LAGO',8.3,2.4,-12.5);
+// Crop rows and small trees in the farm
+for(let row=0;row<4;row++)for(let j=0;j<5;j++){const x=5.4+j*.62,z=-7.4+row*.65;cube(x,.24,z,.12,.28,.12,0x4b713c)}
+function tree(x,z){const trunk=new THREE.Mesh(new THREE.CylinderGeometry(.12,.16,.9,8),material(0x765037));trunk.position.set(x,.55,z);scene.add(trunk);const crown=new THREE.Mesh(new THREE.SphereGeometry(.62,12,10),material(0x477344));crown.position.set(x,1.25,z);scene.add(crown)}
+[[13,-7],[14,-10],[13,-15],[4,-7]].forEach(p=>tree(...p));
+// Street lights in city
+function lamp(x,z){const p=new THREE.Mesh(new THREE.CylinderGeometry(.045,.07,2.2,8),material(0x343a42));p.position.set(x,1.1,z);scene.add(p);cube(x+.22,2.12,z,.55,.07,.07,0x343a42);const b=new THREE.Mesh(new THREE.SphereGeometry(.14,10,8),new THREE.MeshStandardMaterial({color:0xffe6a0,emissive:0xffc85a,emissiveIntensity:.7}));b.position.set(x+.45,2.06,z);scene.add(b)}
+[[-7,-7],[7,-7],[-7,8],[7,8],[-16,7]].forEach(p=>lamp(...p));
+// Border around the model base
+for(const [x,z,w,d] of [[0,-15,37,.2],[0,15,37,.2],[-18.5,0,.2,30],[18.5,0,.2,30]])cube(x,.4,z,w,.25,d,0x333e49);
+document.querySelector('#home').onclick=()=>{camera.position.set(31,27,35);controls.target.set(0,1,0);controls.update()};
+document.querySelector('#above').onclick=()=>{camera.position.set(0,48,.1);controls.target.set(0,0,0);controls.update()};
 let visible=true;document.querySelector('#names').onclick=()=>{visible=!visible;labels.forEach(x=>x.visible=visible);document.querySelector('#names').textContent=visible?'Ocultar nombres':'Mostrar nombres'};
 addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(Math.min(devicePixelRatio,1.7))});
 function animate(){requestAnimationFrame(animate);controls.update();renderer.render(scene,camera)}animate();document.querySelector('#msg').remove();
