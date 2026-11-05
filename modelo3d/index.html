@@ -20,21 +20,21 @@ scene.add(new THREE.HemisphereLight(0xffffff,0x59616b,2.1));const sun=new THREE.
 const labels=[];const material=c=>new THREE.MeshStandardMaterial({color:c,roughness:.84});
 function cube(x,y,z,w,h,d,color,parent=scene){const o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),material(color));o.position.set(x,y,z);o.castShadow=true;o.receiveShadow=true;parent.add(o);return o}
 function tag(t,x,y,z){const cv=document.createElement('canvas');cv.width=512;cv.height=128;const q=cv.getContext('2d');q.fillStyle='#172333eF';q.beginPath();q.roundRect(5,5,502,118,20);q.fill();q.fillStyle='white';q.font='bold 40px Arial';q.textAlign='center';q.textBaseline='middle';q.fillText(t,256,65);const s=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(cv),depthTest:false}));s.position.set(x,y,z);s.scale.set(4.5,1.1,1);scene.add(s);labels.push(s)}
-function building(t,x,z,w,d,h,col,windows=false,roof=0x39424d){const g=new THREE.Group();g.position.set(x,0,z);scene.add(g);cube(0,h/2+.08,0,w,h,d,col,g);cube(0,h+.18,0,w+.12,.18,d+.12,roof,g);if(windows){for(let y=.8;y<h-.2;y+=.9)for(let xx=-w/2+.35;xx<w/2-.1;xx+=.65){cube(xx,y,d/2+.025,.34,.42,.04,0x91c6d3,g);cube(xx,y,-d/2-.025,.34,.42,.04,0x91c6d3,g)}}return g}
+function building(t,x,z,w,d,h,col,windows=false,roof=0x39424d,baseY=0){const g=new THREE.Group();g.position.set(x,baseY,z);scene.add(g);cube(0,h/2+.08,0,w,h,d,col,g);cube(0,h+.18,0,w+.12,.18,d+.12,roof,g);if(windows){for(let y=.8;y<h-.2;y+=.9)for(let xx=-w/2+.35;xx<w/2-.1;xx+=.65){cube(xx,y,d/2+.025,.34,.42,.04,0x91c6d3,g);cube(xx,y,-d/2-.025,.34,.42,.04,0x91c6d3,g)}}return g}
 function ground(x,z,w,d,y,color){cube(x,y,z,w,.12,d,color)}
 // Plataforma general, a una sola cota
 ground(0,0,40,32,-.38,0x667e5b);ground(0,0,39.4,31.4,-.27,0x789064);
 // CIUDAD: calles continuas y manzanas bien definidas
 // Calles principales asfaltadas
-ground(-1,0,4.2,20,.02,0x303943);ground(-1,0,20,3.8,.025,0x303943);
+ground(-1,0,4.2,20,.02,0x303943);ground(-1,0,20,3.8,.045,0x303943);
 ground(-7,0,2.5,18,.02,0x303943);ground(5,0,2.5,18,.02,0x303943);
 ground(-1,-7,19,.9,.03,0x303943);ground(-1,7,19,.9,.03,0x303943);
 ground(-1,-10,20,.5,.03,0xbab8a8);ground(-1,10,20,.5,.03,0xbab8a8);
 // Banquetas y marcas viales encima del asfalto
-for(let z=-8;z<=8;z+=2)ground(-1,z,.13,.85,.105,0xf1df9c);
-for(let x=-10;x<=8;x+=2)ground(x,0,.85,.13,.11,0xf1df9c);
-for(const x of [-3.2,1.2])ground(x,0,.22,20,.13,0xb9b7a9);
-for(const z of [-2,2])ground(-1,z,20,.22,.13,0xb9b7a9);
+for(let z=-8;z<=8;z+=2)ground(-1,z,.13,.85,.17,0xf1df9c);
+for(let x=-10;x<=8;x+=2)ground(x,0,.85,.13,.18,0xf1df9c);
+for(const x of [-3.2,1.2])ground(x,0,.22,20,.22,0xb9b7a9);
+for(const z of [-2,2])ground(-1,z,20,.22,.24,0xb9b7a9);
 // Edificios y comercios en manzanas
 building('EDIFICIO 1',-4.8,-4.5,3.1,3,7,0x879ba8,true);
 building('EDIFICIO 2',1.8,-4.5,3.1,3,5.3,0xb4a18a,true);
@@ -53,10 +53,12 @@ const houses=[[12,-4],[16,-4],[12,3],[16,3]],hc=[0xe1c69b,0xd7dfe3,0xc78f72,0xd8
 houses.forEach((p,i)=>{building('CASA '+(i+1),p[0],p[1],2.4,2.5,1.9,hc[i],false,[0x994d43,0x475a70,0x6c4d42,0x8c5948][i]);cube(p[0],.55,p[1]+1.28,.48,.85,.06,0x493c35)});
 tag('ZONA RESIDENCIAL',14,4.2,7.2);
 // FRENTE: cerro y planta de luz
-const hillGeo=new THREE.ConeGeometry(7.2,6.2,8);const hill=new THREE.Mesh(hillGeo,material(0x657b4e));hill.position.set(-10,2.7,12);hill.scale.set(1.15,1,1);hill.castShadow=true;hill.receiveShadow=true;scene.add(hill);
-building('PLANTA DE LUZ',-10,10.6,3.5,3.1,2.7,0x737c82,false,0x424c55);
-const chimney=new THREE.Mesh(new THREE.CylinderGeometry(.28,.35,2.8,12),material(0x777b80));chimney.position.set(-8.8,5.1,10.2);scene.add(chimney);
-tag('CERRO · PLANTA DE LUZ',-10,7.2,15.5);
+const hillGeo=new THREE.ConeGeometry(7.2,5.4,8);const hill=new THREE.Mesh(hillGeo,material(0x657b4e));hill.position.set(-10,2.5,12);hill.scale.set(1.15,1,1);hill.castShadow=true;hill.receiveShadow=true;scene.add(hill);
+// Terraza plana en la cima: mantiene la planta visible y apoyada sobre el cerro
+const summit=new THREE.Mesh(new THREE.CylinderGeometry(3.35,3.65,.28,12),material(0x788b5c));summit.position.set(-10,5.12,12);summit.castShadow=true;summit.receiveShadow=true;scene.add(summit);
+building('PLANTA DE LUZ',-10,11.5,3.5,3.1,2.7,0x737c82,false,0x424c55,5.26);
+const chimney=new THREE.Mesh(new THREE.CylinderGeometry(.28,.35,2.8,12),material(0x777b80));chimney.position.set(-8.8,9.35,11.1);chimney.castShadow=true;scene.add(chimney);
+tag('CERRO · PLANTA DE LUZ',-10,9.4,15.5);
 // GRANJA al lado de la planta, con pasto, establo, cultivos y lago
 ground(7,11,13,11,-.06,0x8aa36a);
 building('GRANJA',3.2,10,3.4,3,2.4,0xb58b5d,false,0x744b37);
