@@ -54,24 +54,24 @@ houses.forEach((p,i)=>{building('CASA '+(i+1),p[0],p[1],2.4,2.5,1.9,hc[i],false,
 tag('ZONA RESIDENCIAL',14,4.2,7.2);
 // FRENTE: cerro y planta de luz
 // Cerro con cima ancha y aplanada: la planta queda asentada, no en una punta
-const hillGeo=new THREE.CylinderGeometry(3.25,7.2,5.4,8);const hill=new THREE.Mesh(hillGeo,material(0x657b4e));hill.position.set(-10,2.5,12);hill.scale.set(1.15,1,1);hill.castShadow=true;hill.receiveShadow=true;scene.add(hill);
+const hillGeo=new THREE.CylinderGeometry(3.25,7.2,5.4,8);const hill=new THREE.Mesh(hillGeo,material(0x657b4e));hill.position.set(-10,2.5,8.5);hill.scale.set(1.15,1,1);hill.castShadow=true;hill.receiveShadow=true;scene.add(hill);
 // La base del edificio coincide exactamente con la superficie plana de la cima (y=5.2)
-building('PLANTA DE LUZ',-10,11.5,3.5,3.1,2.7,0x737c82,false,0x424c55,5.12);
-const chimney=new THREE.Mesh(new THREE.CylinderGeometry(.28,.35,2.8,12),material(0x777b80));chimney.position.set(-8.8,9.27,11.1);chimney.castShadow=true;scene.add(chimney);
-tag('CERRO · PLANTA DE LUZ',-10,9.4,15.5);
+building('PLANTA DE LUZ',-10,8,3.5,3.1,2.7,0x737c82,false,0x424c55,5.12);
+const chimney=new THREE.Mesh(new THREE.CylinderGeometry(.28,.35,2.8,12),material(0x777b80));chimney.position.set(-8.8,9.27,7.6);chimney.castShadow=true;scene.add(chimney);
+tag('CERRO · PLANTA DE LUZ',-10,9.4,12);
 // GRANJA al lado de la planta, con pasto, establo, cultivos y lago
-ground(7,11,13,11,-.06,0x8aa36a);
-building('GRANJA',3.2,10,3.4,3,2.4,0xb58b5d,false,0x744b37);
-for(let r=0;r<3;r++)for(let c=0;c<4;c++){const crop=cube(1.2+c*.62,.22,6.7+r*.62,.18,.35,.18,0x537a3d);}
+ground(7,9.5,13,11,-.06,0x8aa36a);
+building('GRANJA',3.2,8.5,3.4,3,2.4,0xb58b5d,false,0x744b37);
+for(let r=0;r<3;r++)for(let c=0;c<4;c++){const crop=cube(1.2+c*.62,.22,5.2+r*.62,.18,.35,.18,0x537a3d);}
 // Lago a la misma altura de la superficie de la granja
-const lake=new THREE.Mesh(new THREE.CylinderGeometry(3.7,3.7,.12,48),new THREE.MeshStandardMaterial({color:0x287caa,roughness:.22,metalness:.12}));lake.scale.z=.72;lake.position.set(10,0.02,12);lake.receiveShadow=true;scene.add(lake);
+const lake=new THREE.Mesh(new THREE.CylinderGeometry(3.7,3.7,.12,48),new THREE.MeshStandardMaterial({color:0x287caa,roughness:.22,metalness:.12}));lake.scale.z=.72;lake.position.set(10,0.02,10.5);lake.receiveShadow=true;scene.add(lake);
 // orilla alrededor del lago
-const shore=new THREE.Mesh(new THREE.TorusGeometry(3.72,.22,8,48),material(0xc5b58a));shore.rotation.x=Math.PI/2;shore.scale.set(1,.72,1);shore.position.set(10,.08,12);scene.add(shore);
+const shore=new THREE.Mesh(new THREE.TorusGeometry(3.72,.22,8,48),material(0xc5b58a));shore.rotation.x=Math.PI/2;shore.scale.set(1,.72,1);shore.position.set(10,.08,10.5);scene.add(shore);
 // Puente peatonal sobre el lago, apoyado a nivel de orilla
-const bridge=new THREE.Group();bridge.position.set(10,.22,12);scene.add(bridge);cube(0,0,0,1.45,.22,5.5,0x8b6848,bridge);for(const x of [-.68,.68])cube(x,.35,0,.1,.55,5.5,0x514a42,bridge);
-tag('PUENTE SOBRE EL LAGO',10,1.5,8.5);
+const bridge=new THREE.Group();bridge.position.set(10,.22,10.5);scene.add(bridge);cube(0,0,0,1.45,.22,5.5,0x8b6848,bridge);for(const x of [-.68,.68])cube(x,.35,0,.1,.55,5.5,0x514a42,bridge);
+tag('PUENTE SOBRE EL LAGO',10,1.5,7);
 // Camino conecta ciudad, granja y cerro
-ground(4,9,2.2,8,.02,0x9b927b);ground(0,11,8,.9,.025,0x9b927b);
+ground(4,7.5,2.2,8,.02,0x9b927b);ground(0,9.5,8,.9,.025,0x9b927b);
 // Marco de la maqueta
 for(const [x,z,w,d] of [[0,-16,40,.22],[0,16,40,.22],[-20,0,.22,32],[20,0,.22,32]])cube(x,-.05,z,w,.3,d,0x39434a);
 document.querySelector('#home').onclick=()=>{camera.position.set(34,30,38);controls.target.set(0,1,1);controls.update()};
